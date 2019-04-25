@@ -103,7 +103,7 @@ map.on('style.load', function() {
     type: 'fill',
     source: 'typology-data',
     paint: {
-      'fill-opacity': 0.8,
+      'fill-opacity': 0.7,
       'fill-color': {
         type: 'categorical',
         property: "NY January 2019 typology_Type_1.19",
@@ -208,8 +208,13 @@ map.on('style.load', function() {
       $('#address').text("GEOID: " + lot.properties.geoid);
       $('#landuse').text(typologyDescription);
 
-      //add additional highlighting layer to identify areas with same typology as the selected tract
-      //doesn't function as intended...only highlights the single selected tract
+      // set this lot's polygon feature as the data for the highlight source
+      map.getSource('highlight-feature').setData(lot.geometry);
+    } else {
+      map.getCanvas().style.cursor = 'default'; // make the cursor default
+
+      //add additional layer on top to identify/highlight all areas with same typology as the selected tract
+      //doesn't work...only highlights the single selected tract (and throws an error, so commenting it out)
       //
       // map.addLayer({
       //   id: 'typology-selected',
@@ -217,7 +222,7 @@ map.on('style.load', function() {
       //   source: 'highlight-feature',
       //   paint: {
       //     'fill-opacity': 1,
-      //     'fill-color': {
+      //     'fill-color': "{
       //       type: 'categorical',
       //       property: "NY January 2019 typology_Type_1.19",
       //       stops: [
@@ -225,15 +230,10 @@ map.on('style.load', function() {
       //             typologyDescription,
       //             "blue",
       //           ],
-      //         ]
+      //         ]"
       //       }
       //   }
       // }, 'waterway-label')
-
-      // set this lot's polygon feature as the data for the highlight source
-      map.getSource('highlight-feature').setData(lot.geometry);
-    } else {
-      map.getCanvas().style.cursor = 'default'; // make the cursor default
 
       // reset the highlight source to an empty featurecollection
       map.getSource('highlight-feature').setData({

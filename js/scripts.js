@@ -198,15 +198,22 @@ map.on('style.load', function() {
     // get the first feature from the array of returned features.
     var lot = features[0]
     // console.log(lot)
+    // console.log(e)
     if (lot) {  // if there's a lot under the mouse, do stuff
       map.getCanvas().style.cursor = 'pointer';  // make the cursor a pointer
 
       // lookup the corresponding description for the typology
       var typologyDescription = lot.properties["NY January 2019 typology_Type_1.19"];
 
-      // use jquery to display the address and land use description to the sidebar
+      // use jquery to display the geoid and typology the sidebar
       $('#address').text("GEOID: " + lot.properties.geoid);
       $('#landuse').text(typologyDescription);
+
+      //add popup to display typology of selected tract
+      new mapboxgl.Popup()
+      .setLngLat(e.lngLat)
+      .setHTML(typologyDescription)
+      .addTo(map);
 
       // set this lot's polygon feature as the data for the highlight source
       map.getSource('highlight-feature').setData(lot.geometry);
